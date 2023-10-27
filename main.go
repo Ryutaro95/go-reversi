@@ -1,12 +1,11 @@
 package main
 
 import (
-	"database/sql"
-	"fmt"
 	"net/http"
 	"time"
 
 	"github.com/Ryutaro95/go-reversi/domain/model"
+	"github.com/Ryutaro95/go-reversi/infrastructure/database"
 	"github.com/Ryutaro95/go-reversi/infrastructure/repository"
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
@@ -30,10 +29,9 @@ func StartNewGame(c *gin.Context) {
 	now := time.Now()
 	// ゲームデータをstructに保存
 	game := model.Game{StartedAt: now}
-	// mysqlのコネクションを取得
-	db, err := sql.Open("mysql", "reversi:password@tcp(localhost:3306)/reversi")
+	// connect to database
+	db, err := database.NewDB()
 	if err != nil {
-		fmt.Println(err)
 		panic(err.Error())
 	}
 	defer db.Close()
