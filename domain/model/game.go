@@ -3,6 +3,6 @@ package model
 import "time"
 
 type Game struct {
-	Id        int
+	ID        int64
 	StartedAt time.Time
 }

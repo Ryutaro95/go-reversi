@@ -10,9 +10,9 @@ func NewDB() (*sql.DB, error) {
 		"%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local",
 		"reversi",
 		"password",
-		"password",
 		"localhost",
-		"3305",
+		"3306",
+		"reversi",
 	)
 
 	conn, err := sql.Open("mysql", dsn)

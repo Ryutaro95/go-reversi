@@ -1,34 +1,22 @@
-package repository
+package persistence
 
 import (
 	"database/sql"
 	"strings"
 
 	"github.com/Ryutaro95/go-reversi/domain/model"
+	"github.com/Ryutaro95/go-reversi/domain/model/repository"
 )
 
-type squareRepository struct{}
-
-func NewSquareRepository() *squareRepository {
-	return &squareRepository{}
+type SquarePersistence struct {
+	DB *sql.DB
 }
 
+func NewSquarePersistence(db *sql.DB) repository.SquareRepo {
+	return &SquarePersistence{DB: db}
+}
 
-// このようなSQLを作成してInsertする
-// INSERT INTO KEY_VALUE
-// 	(KEY_NO, STRING_VALUE, NUMBER_VALUE)
-// VALUES
-// 	(1, 'VALUE1', 100),
-// 	(2, 'VALUE2', 200),
-// 	(3, 'VALUE3', 300),
-// 	(4, 'VALUE4', 400),
-// 	(5, 'VALUE5', 500),
-// 	(6, 'VALUE6', 600),
-// 	(7, 'VALUE7', 700),
-// 	(8, 'VALUE8', 800),
-// 	(9, 'VALUE9', 900),
-// 	(10, 'VALUE10', 1000);
-func (sr *squareRepository) InsertAll(db *sql.DB, turn model.Turn, turnId int) error {
+func (sp *SquarePersistence) InsertAll(turn *model.Turn) error {
 	squaresInsertSql := "insert into squares (turn_id, x, y, disc) values "
 	squaresCount := 0
 	// 盤面数を計算
@@ -42,7 +30,7 @@ func (sr *squareRepository) InsertAll(db *sql.DB, turn model.Turn, turnId int) e
 	query := strings.Join(querys, ", ")
 	squaresInsertSql += query
 
-	in, err := db.Prepare(squaresInsertSql)
+	in, err := sp.DB.Prepare(squaresInsertSql)
 	if err != nil {
 		return err
 	}
@@ -50,7 +38,7 @@ func (sr *squareRepository) InsertAll(db *sql.DB, turn model.Turn, turnId int) e
 	squaresInsertValues := []any{}
 	for y, line := range turn.Board {
 		for x, disc := range line {
-			squaresInsertValues = append(squaresInsertValues, turnId)
+			squaresInsertValues = append(squaresInsertValues, turn.ID)
 			squaresInsertValues = append(squaresInsertValues, x)
 			squaresInsertValues = append(squaresInsertValues, y)
 			squaresInsertValues = append(squaresInsertValues, disc)

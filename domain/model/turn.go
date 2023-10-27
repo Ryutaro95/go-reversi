@@ -5,7 +5,8 @@ import (
 )
 
 type Turn struct {
-	GameId    int
+	ID        int64
+	GameID    int64
 	TurnCount int
 	NextDisc  Disc
 	Move      int
@@ -13,9 +14,9 @@ type Turn struct {
 	EndAt     time.Time
 }
 
-func NewFirstTurn(gameId int, endAt time.Time) Turn {
-	return Turn{
-		GameId:   gameId,
+func NewFirstTurn(gameID int64, endAt time.Time) *Turn {
+	return &Turn{
+		GameID:   gameID,
 		NextDisc: Dark,
 		Board:    INITIAL_BOARD,
 		EndAt:    endAt,

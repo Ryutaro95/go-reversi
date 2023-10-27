@@ -1,61 +1,29 @@
 package main
 
 import (
-	"net/http"
-	"time"
-
-	"github.com/Ryutaro95/go-reversi/domain/model"
 	"github.com/Ryutaro95/go-reversi/infrastructure/database"
-	"github.com/Ryutaro95/go-reversi/infrastructure/repository"
+	routers "github.com/Ryutaro95/go-reversi/router"
+
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
 )
 
 func main() {
-	router := gin.Default()
-	router.GET("/ping", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "pong",
-		})
-	})
-
-	router.POST("/api/games", StartNewGame)
-
-	router.Run(":3000") // 0.0.0.0:8080 でサーバーを立てます。
+	if err := run(); err != nil {
+		panic(err)
+	}
 }
 
-func StartNewGame(c *gin.Context) {
-	// 現在時刻を取得
-	now := time.Now()
-	// ゲームデータをstructに保存
-	game := model.Game{StartedAt: now}
-	// connect to database
+func run() error {
+	router := gin.Default()
+
 	db, err := database.NewDB()
 	if err != nil {
-		panic(err.Error())
+		return err
 	}
-	defer db.Close()
+	// routers.SetRouting(db, router)
+	routers.SetRouting(db, router)
+	router.Run(":3000") // 0.0.0.0:8080 でサーバーを立てます。
 
-	// ゲーム開始時にgamesテーブルに開始日時の記録としてstartedAtをinsertする
-	gameRepo := repository.NewGameRepository()
-	gameId, err := gameRepo.Insert(db, game)
-	if err != nil {
-		panic(err)
-	}
-	game.Id = gameId
-
-	// ゲーム開始時に1ターン目を保存
-	turn := model.NewFirstTurn(game.Id, now)
-	turnRepository := repository.NewTurnRepository()
-	turnId, err := turnRepository.Insert(db, turn)
-	if err != nil {
-		panic(err)
-	}
-
-	squareRepository := repository.NewSquareRepository()
-	squareRepository.InsertAll(db, turn, turnId)
-
-	c.JSON(http.StatusCreated, gin.H{
-		"status": "ok",
-	})
+	return nil
 }
