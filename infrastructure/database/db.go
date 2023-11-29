@@ -3,9 +3,10 @@ package database
 import (
 	"database/sql"
 	"fmt"
+	"log"
 )
 
-func NewDB() (*sql.DB, error) {
+func NewDB() *sql.DB {
 	dsn := fmt.Sprintf(
 		"%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local",
 		"reversi",
@@ -14,12 +15,10 @@ func NewDB() (*sql.DB, error) {
 		"3306",
 		"reversi",
 	)
-
 	conn, err := sql.Open("mysql", dsn)
-
 	if err != nil {
-		return nil, err
+		log.Fatalf("MySQL init: %s", err)
 	}
 
-	return conn, nil
+	return conn
 }

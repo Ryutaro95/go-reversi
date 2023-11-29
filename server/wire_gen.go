@@ -4,7 +4,7 @@
 //go:build !wireinject
 // +build !wireinject
 
-package router
+package server
 
 import (
 	"database/sql"
