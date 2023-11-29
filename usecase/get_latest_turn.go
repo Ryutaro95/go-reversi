@@ -31,9 +31,8 @@ type GetLatestTurnOutput struct {
 	WinnerDisc model.Disc
 }
 
-func NewGetLatestTurn(db *sql.DB, gameRepo repository.GameRepo, turnRepo repository.TurnRepo, squareRepo repository.SquareRepo, moveRepo repository.MoveRepo) GetLatestTurnUsecase {
+func NewGetLatestTurn(gameRepo repository.GameRepo, turnRepo repository.TurnRepo, squareRepo repository.SquareRepo, moveRepo repository.MoveRepo) GetLatestTurnUsecase {
 	return &GetLatestTurn{
-		DB:         db,
 		GameRepo:   gameRepo,
 		TurnRepo:   turnRepo,
 		SquareRepo: squareRepo,

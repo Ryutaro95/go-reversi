@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"log"
 	"net/http"
 
 	"github.com/Ryutaro95/go-reversi/usecase"
@@ -17,7 +18,7 @@ func NewStartGame(s usecase.StartGameUsecase) *StartGame {
 
 func (sg *StartGame) ServeHTTP(c *gin.Context) {
 	if err := sg.Usecase.StartGame(); err != nil {
-		panic(err)
+		log.Fatalf("start game fail %s", err)
 	}
 
 	c.JSON(http.StatusCreated, gin.H{

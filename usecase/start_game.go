@@ -20,9 +20,8 @@ type StartGame struct {
 	SquareRepo repository.SquareRepo
 }
 
-func NewStartGame(db *sql.DB, gameRepo repository.GameRepo, turnRepo repository.TurnRepo, squareRepo repository.SquareRepo) StartGameUsecase {
+func NewStartGame(gameRepo repository.GameRepo, turnRepo repository.TurnRepo, squareRepo repository.SquareRepo) StartGameUsecase {
 	return &StartGame{
-		DB:         db,
 		GameRepo:   gameRepo,
 		TurnRepo:   turnRepo,
 		SquareRepo: squareRepo,
@@ -31,18 +30,15 @@ func NewStartGame(db *sql.DB, gameRepo repository.GameRepo, turnRepo repository.
 
 func (g *StartGame) StartGame() error {
 	now := time.Now()
-	// ゲーム開始時に保存
 	game := &model.Game{StartedAt: now}
 	game, err := g.GameRepo.Create(game)
 	if err != nil {
 		return fmt.Errorf("StartGame() fail: %w", err)
 	}
 
-	// 初期ターンを保存
 	turn := model.NewFirstTurn(game.ID, now)
 	g.TurnRepo.Create(turn)
 
-	// 初期盤面のマスを保存
 	if err := g.SquareRepo.InsertAll(turn); err != nil {
 		return fmt.Errorf("StartGame() fail: %w", err)
 	}

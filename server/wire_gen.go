@@ -19,7 +19,7 @@ func InitStartGame(db *sql.DB) *handler.StartGame {
 	gameRepo := persistence.NewGamePersistence(db)
 	turnRepo := persistence.NewTurnPersistence(db)
 	squareRepo := persistence.NewSquarePersistence(db)
-	startGameUsecase := usecase.NewStartGame(db, gameRepo, turnRepo, squareRepo)
+	startGameUsecase := usecase.NewStartGame(gameRepo, turnRepo, squareRepo)
 	startGame := handler.NewStartGame(startGameUsecase)
 	return startGame
 }
@@ -29,7 +29,7 @@ func InitLatestTurn(db *sql.DB) *handler.GetLatestTurn {
 	turnRepo := persistence.NewTurnPersistence(db)
 	squareRepo := persistence.NewSquarePersistence(db)
 	moveRepo := persistence.NewMovePersistence(db)
-	getLatestTurnUsecase := usecase.NewGetLatestTurn(db, gameRepo, turnRepo, squareRepo, moveRepo)
+	getLatestTurnUsecase := usecase.NewGetLatestTurn(gameRepo, turnRepo, squareRepo, moveRepo)
 	getLatestTurn := handler.NewGetLatestTurn(getLatestTurnUsecase)
 	return getLatestTurn
 }
