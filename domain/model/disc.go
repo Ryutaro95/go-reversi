@@ -8,17 +8,23 @@ const (
 	Light
 )
 
-const E = Empty
-const D = Dark
-const L = Light
+const (
+	E = Empty
+	D = Dark
+	L = Light
+)
+
+func NewInitialBoard() *[][]Disc {
+	return &INITIAL_BOARD
+}
 
 var INITIAL_BOARD = [][]Disc{
-	[]Disc{E, E, E, E, E, E, E, E},
-	[]Disc{E, E, E, E, E, E, E, E},
-	[]Disc{E, E, E, E, E, E, E, E},
-	[]Disc{E, E, E, D, L, E, E, E},
-	[]Disc{E, E, E, L, D, E, E, E},
-	[]Disc{E, E, E, E, E, E, E, E},
-	[]Disc{E, E, E, E, E, E, E, E},
-	[]Disc{E, E, E, E, E, E, E, E},
+	{E, E, E, E, E, E, E, E},
+	{E, E, E, E, E, E, E, E},
+	{E, E, E, E, E, E, E, E},
+	{E, E, E, D, L, E, E, E},
+	{E, E, E, L, D, E, E, E},
+	{E, E, E, E, E, E, E, E},
+	{E, E, E, E, E, E, E, E},
+	{E, E, E, E, E, E, E, E},
 }

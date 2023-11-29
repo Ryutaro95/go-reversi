@@ -2,6 +2,7 @@ package persistence
 
 import (
 	"database/sql"
+	"fmt"
 	"strings"
 
 	"github.com/Ryutaro95/go-reversi/domain/model"
@@ -14,6 +15,27 @@ type SquarePersistence struct {
 
 func NewSquarePersistence(db *sql.DB) repository.SquareRepo {
 	return &SquarePersistence{DB: db}
+}
+
+func (sp *SquarePersistence) FetchSquaresByTurnID(turnId int64) ([]*model.Square, error) {
+	var squares []*model.Square
+	rows, err := sp.DB.Query("select id, turn_id, x, y, disc from squares where turn_id = ?", turnId)
+	if err != nil {
+		return []*model.Square{}, fmt.Errorf("FetchSquaresByTurnID() -> sp.DB.Query() fail: %w", err)
+	}
+
+	for rows.Next() {
+		square := &model.Square{}
+		if err := rows.Scan(&square.ID, &square.TurnID, &square.X, &square.Y, &square.Disc); err != nil {
+			return []*model.Square{}, fmt.Errorf("FetchSquaresByTurnID() fail: %w", err)
+		}
+		squares = append(squares, square)
+	}
+	if err = rows.Err(); err != nil {
+		return []*model.Square{}, fmt.Errorf("FetchSquaresByTurnID() fail: %w", err)
+	}
+
+	return squares, nil
 }
 
 func (sp *SquarePersistence) InsertAll(turn *model.Turn) error {

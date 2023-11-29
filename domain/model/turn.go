@@ -18,7 +18,7 @@ func NewFirstTurn(gameID int64, endAt time.Time) *Turn {
 	return &Turn{
 		GameID:   gameID,
 		NextDisc: Dark,
-		Board:    INITIAL_BOARD,
+		Board:    *NewInitialBoard(),
 		EndAt:    endAt,
 	}
 }

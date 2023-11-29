@@ -1,5 +1,4 @@
-openapi: '3.0.3'
-
+openapi: "3.0.3"
 info:
   title: reversi-webapp
   version: 1.0.0
@@ -63,7 +62,7 @@ paths:
                     example: 1
                   board:
                     type: array
-                    example: 
+                    example:
                       [
                         [0, 0, 0, 0, 0, 0, 0, 0],
                         [0, 0, 0, 0, 0, 0, 0, 0],
@@ -80,7 +79,7 @@ paths:
                   winnerDisc:
                     type: integer
                     example: 1
-  /api/games/latest/turns:                  
+  /api/games/latest/turns:
     post:
       requestBody:
         content:

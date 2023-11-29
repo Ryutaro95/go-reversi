@@ -6,4 +6,5 @@ import (
 
 type GameRepo interface {
 	Create(game *model.Game) (*model.Game, error)
+	FindLatest() (*model.Game, error)
 }

@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"database/sql"
+	"fmt"
 	"time"
 
 	"github.com/Ryutaro95/go-reversi/domain/model"
@@ -13,17 +14,17 @@ type StartGameUsecase interface {
 }
 
 type StartGame struct {
-	DB       *sql.DB
-	GameRepo repository.GameRepo
-	TurnRepo repository.TurnRepo
+	DB         *sql.DB
+	GameRepo   repository.GameRepo
+	TurnRepo   repository.TurnRepo
 	SquareRepo repository.SquareRepo
 }
 
 func NewStartGame(db *sql.DB, gameRepo repository.GameRepo, turnRepo repository.TurnRepo, squareRepo repository.SquareRepo) StartGameUsecase {
 	return &StartGame{
-		DB:       db,
-		GameRepo: gameRepo,
-		TurnRepo: turnRepo,
+		DB:         db,
+		GameRepo:   gameRepo,
+		TurnRepo:   turnRepo,
 		SquareRepo: squareRepo,
 	}
 }
@@ -34,7 +35,7 @@ func (g *StartGame) StartGame() error {
 	game := &model.Game{StartedAt: now}
 	game, err := g.GameRepo.Create(game)
 	if err != nil {
-		return err
+		return fmt.Errorf("StartGame() fail: %w", err)
 	}
 
 	// 初期ターンを保存
@@ -42,7 +43,9 @@ func (g *StartGame) StartGame() error {
 	g.TurnRepo.Create(turn)
 
 	// 初期盤面のマスを保存
-	g.SquareRepo.InsertAll(turn)
+	if err := g.SquareRepo.InsertAll(turn); err != nil {
+		return fmt.Errorf("StartGame() fail: %w", err)
+	}
 
 	return nil
 }

@@ -22,3 +22,15 @@ func InitStartGame(db *sql.DB) *handler.StartGame {
 	)
 	return &handler.StartGame{}
 }
+
+func InitLatestTurn(db *sql.DB) *handler.GetLatestTurn {
+	wire.Build(
+		persistence.NewGamePersistence,
+		persistence.NewTurnPersistence,
+		persistence.NewSquarePersistence,
+		persistence.NewMovePersistence,
+		usecase.NewGetLatestTurn,
+		handler.NewGetLatestTurn,
+	)
+	return &handler.GetLatestTurn{}
+}
