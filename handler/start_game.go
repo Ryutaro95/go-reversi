@@ -22,6 +22,6 @@ func (sg *StartGame) ServeHTTP(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusCreated, gin.H{
-		"status": "ok",
+		"status": "Created",
 	})
 }
