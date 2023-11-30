@@ -25,10 +25,10 @@ type GetLatestTurnOutput struct {
 	Id         int64
 	GameId     int64
 	TurnCount  int
-	Board      [][]*model.Disc
-	NextDisc   *model.Disc
+	Board      [][]int
+	NextDisc   int
 	EndAt      time.Time
-	WinnerDisc model.Disc
+	WinnerDisc int
 }
 
 func NewGetLatestTurn(gameRepo repository.GameRepo, turnRepo repository.TurnRepo, squareRepo repository.SquareRepo, moveRepo repository.MoveRepo) GetLatestTurnUsecase {
@@ -55,7 +55,6 @@ func (gt *GetLatestTurn) GetLatestTurn(turnCount string) *GetLatestTurnOutput {
 	winnerDisc := model.Empty
 
 	squares, err := gt.SquareRepo.FetchSquaresByTurnID(turn.ID)
-	board := buildBoardFromSquares(squares)
 	if err != nil {
 		log.Fatalf("GetLatestTurn() fail: %v", err)
 	}
@@ -69,20 +68,20 @@ func (gt *GetLatestTurn) GetLatestTurn(turnCount string) *GetLatestTurnOutput {
 
 	return &GetLatestTurnOutput{
 		TurnCount:  turn.TurnCount,
-		Board:      board,
-		NextDisc:   &turn.NextDisc,
-		WinnerDisc: winnerDisc,
+		Board:      buildBoardFromSquares(squares),
+		NextDisc:   int(turn.NextDisc),
+		WinnerDisc: int(winnerDisc),
 	}
 }
 
-func buildBoardFromSquares(squares []*model.Square) [][]*model.Disc {
+func buildBoardFromSquares(squares []*model.Square) [][]int {
 	initBoard := *model.NewInitialBoard()
-	board := make([][]*model.Disc, len(initBoard))
+	board := make([][]int, len(initBoard))
 	for i := range board {
-		board[i] = make([]*model.Disc, len(board))
+		board[i] = make([]int, len(board))
 	}
 	for _, square := range squares {
-		board[square.Y][square.X] = &square.Disc
+		board[square.Y][square.X] = int((*square).Disc)
 	}
 	return board
 }
