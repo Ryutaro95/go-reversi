@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"github.com/Ryutaro95/go-reversi/domain/model"
-	"github.com/Ryutaro95/go-reversi/domain/model/repository"
+	"github.com/Ryutaro95/go-reversi/domain/repository"
 )
 
 type SquarePersistence struct {
